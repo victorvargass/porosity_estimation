@@ -1,5 +1,5 @@
 
-from utils import calculate_bins, load_wav_files, record_sample, get_sound_devices, calculate_k, calculate_spectrums, calculate_coherence, calculate_transfer_function, calculate_reflection, calculate_absorption, plot_signals, generate_csv
+from utils import calculate_bins, load_wav_files, record_sample, get_sound_devices, calculate_k, calculate_spectrums, calculate_coherence, calculate_transfer_function, calculate_reflection, calculate_absorption, plot_signals, generate_csv, generate_short_csv
 from pathlib import Path
 import numpy as np
 
@@ -15,7 +15,7 @@ if __name__ == "__main__":
     L = 0.5    # Distance between reference microphone and sample (m)
     D = 0.0986 # Tube diameter (m)
 
-    x_min, x_max = 0, 3000
+    freq_min, freq_max = 250, 2000
     y_min, y_max = 0, 1
 
     is_sample = True
@@ -73,16 +73,22 @@ if __name__ == "__main__":
 
     plot_signals(
         filename=filename,
-        sample_data=sample_data,
-        N=N,
         freqs=freqs,
-        S11_aux=S11_aux,
-        S22_aux=S22_aux,
         alfa=alfa,
-        coherence=coherence
+        coherence=coherence,
+        freq_min=freq_min,
+        freq_max=freq_max
     )
-        print(f"Iteración {iteration} finalizada")
+    generate_short_csv(
+        filename=filename,
+        freqs=freqs,
+        alfa=alfa,
+        coherence=coherence,
+        freq_min=freq_min,
+        freq_max=freq_max,
+    )
 
+    '''
     # Generar el archivo CSV
     generate_csv(
         filename=filename,
@@ -95,3 +101,4 @@ if __name__ == "__main__":
         H_12=H_12,
         coherence=coherence
     )
+    '''

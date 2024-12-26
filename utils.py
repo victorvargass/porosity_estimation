@@ -125,49 +125,47 @@ def calibration_factor(H_12, H_21):
     # Calibration factor Hc
     return np.sqrt(H_12*H_21)
 
-def plot_signals(filename, sample_data, N, freqs, S11_aux, S22_aux, alfa, coherence):
+def plot_signals(filename, freqs, alfa, coherence, freq_min, freq_max):
+    # Verificar que los tamaños de freqs, alfa y coherence coincidan
+    min_length = min(len(freqs), len(alfa), len(coherence))
+    freqs = freqs[:min_length]
+    alfa = alfa[:min_length]
+    coherence = coherence[:min_length]
+
+    # Filtrar índices según los límites de frecuencia
+    mask = (freqs >= freq_min) & (freqs <= freq_max)
+
+    # Filtrar los datos para las frecuencias seleccionadas
+    freqs_filtered = freqs[mask]
+    alfa_filtered = alfa[mask]
+    coherence_filtered = coherence[mask]
+
     # Prepare figure
-    plt.figure(figsize=(10,12))
+    plt.figure(figsize=(10, 12))
 
-    # Plot time-domain signals
-    plt.subplot(3,2,1)
-    plt.plot(sample_data[0][0:N])
-    plt.title("Canal L")
-    plt.ylim([-1,1])
+    plt.subplot(2, 1, 1)
+    plt.plot(freqs_filtered, alfa_filtered.real, label="Absorción")
+    plt.title("Coef. Absorción")
+    plt.ylim([0, 1])
+    plt.xlabel("Frecuencia (Hz)")
+    plt.ylabel("Coef. Absorción")
+    plt.grid(True)
 
-    plt.subplot(3,2,2)
-    plt.plot(sample_data[0][0:N])
-    plt.title("Canal R")
-    plt.ylim([-1,1])
-    
-    # Plot initial S11 and S22
-    plt.subplot(3,2,3)
-    plt.plot(freqs[0:400], S11_aux[0:400].real)  # Real part since it's power
-    plt.title("S11 avg")
-    plt.ylim([0,100000])
-
-    plt.subplot(3,2,4)
-    plt.plot(freqs[0:400], S22_aux[0:400].real)
-    plt.title("S22 avg")
-    plt.ylim([0,100000])
-
-    plt.subplot(3,2,5)
-    plt.plot(freqs[0:400], alfa[0:400].real)  # alfa is real
-    plt.title("Coef. Absorcion")
-    plt.ylim([0,1])
-
-    plt.subplot(3,2,6)
-    plt.plot(freqs[0:400], coherence[0:400].real)  # coh should be real and >=0
+    plt.subplot(2, 1, 2)
+    plt.plot(freqs_filtered, coherence_filtered.real, label="Coherencia", color="orange")
     plt.title("Coherencia")
-    plt.ylim([0,1])
+    plt.ylim([0, 1])
+    plt.xlabel("Frecuencia (Hz)")
+    plt.ylabel("Coherencia")
+    plt.grid(True)
 
     plt.tight_layout()
+
     plots_folder = Path('plots/')
     plots_folder.mkdir(parents=True, exist_ok=True)
     plot_filename = plots_folder / f"{filename}.png"
     plt.savefig(plot_filename)
     plt.show()
-
 
 def generate_csv(freqs, S11_aux, S12_aux, S22_aux, R, alfa, H_12, coherence, filename):
 
@@ -205,3 +203,33 @@ def generate_csv(freqs, S11_aux, S12_aux, S22_aux, R, alfa, H_12, coherence, fil
     data_filename = data_folder / f"{filename}.csv"
     df.to_csv(data_filename, index=False)
     print(f"Archivo CSV generado: {filename}")
+
+
+def generate_short_csv(freqs, alfa, coherence, filename, freq_min, freq_max):
+    # Crear máscara para las frecuencias dentro del rango
+    mask_freqs = (freqs >= freq_min) & (freqs <= freq_max)
+
+    # Ajustar las longitudes de alfa y coherence si no coinciden con freqs
+    alfa = alfa[:len(freqs)]
+    coherence = coherence[:len(freqs)]
+
+    # Filtrar los datos según la máscara
+    freqs_filtered = freqs[mask_freqs]
+    alfa_filtered = alfa[mask_freqs]
+    coherence_filtered = coherence[mask_freqs]
+
+    # Preparar datos para exportar
+    data = {
+        "f": freqs_filtered.astype(int),
+        "Alfa": np.round(alfa_filtered, 2),
+        "Coherencia": np.round(coherence_filtered.real, 2)
+    }
+
+    df = pd.DataFrame(data)
+
+    # Crear carpeta y guardar archivo CSV
+    data_folder = Path('data/')
+    data_folder.mkdir(parents=True, exist_ok=True)
+    data_filename = data_folder / f"{filename}.csv"
+    df.to_csv(data_filename, index=False)
+    print(f"Archivo CSV generado: {data_filename}")
