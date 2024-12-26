@@ -50,19 +50,18 @@ if __name__ == "__main__":
         S22_aux = S22_avg
         S12_aux = S12_avg
 
-        print(f"Iteración {iteration} finalizada")
 
-    # Coherence Coefficient:
-    coherence =  calculate_coherence(S11_aux, S22_aux, S12_aux)
+        # Coherence Coefficient:
+        coherence =  calculate_coherence(S11_aux, S22_aux, S12_aux)
 
-    # Transfer function H_12:
-    H_12 = calculate_transfer_function(S12_aux, S11_aux, bins)
+        # Transfer function H_12:
+        H_12 = calculate_transfer_function(S12_aux, S11_aux, bins)
 
-    # Reflection Coefficient:
-    R = calculate_reflection(k, S, L, H_12)
-    
-    # Absorption Coefficient:
-    alfa = calculate_absorption(R)
+        # Reflection Coefficient:
+        R = calculate_reflection(k, S, L, H_12)
+        
+        # Absorption Coefficient:
+        alfa = calculate_absorption(R)
 
     plot_signals(
         filename=filename,
@@ -74,6 +73,7 @@ if __name__ == "__main__":
         alfa=alfa,
         coherence=coherence
     )
+        print(f"Iteración {iteration} finalizada")
 
     # Generar el archivo CSV
     generate_csv(
