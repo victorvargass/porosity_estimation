@@ -18,15 +18,18 @@ if __name__ == "__main__":
     x_min, x_max = 0, 3000
     y_min, y_max = 0, 1
 
+    is_sample = True
+
     #sound_devices = get_sound_devices()
     #print(sound_devices)
     device_index = 1
 
-    samples_folder = Path('samples/')
-    channel1_file = samples_folder / 'Take1_Audio 1-1.wav'
-    channel2_file = samples_folder / 'Take1_Audio 2-1.wav'
-    filename = 'Muestra 1'
-    #sample_data, fs = load_wav_files(channel1_file, channel2_file, N) # Cut the sample in N size splits 
+    if is_sample:
+        samples_folder = Path('samples/')
+        channel1_file = samples_folder / 'Take1_Audio 1-1.wav'
+        channel2_file = samples_folder / 'Take1_Audio 2-1.wav'
+        filename = 'Muestra 1'
+        sample_data, fs = load_wav_files(channel1_file, channel2_file, N) # Cut the sample in N size splits 
 
     freqs = fs * np.arange(bins) / N
     k = calculate_k(freqs, C)
@@ -35,9 +38,11 @@ if __name__ == "__main__":
 
     for iteration in range(1, M + 1):
         print(f"Iteración {iteration} iniciada")
-        sample_data = record_sample(N, fs, device_index)
-        #S_11, S_22, S_12 = calculate_spectrums(sample_data[iteration-1])
-        S_11, S_22, S_12 = calculate_spectrums(sample_data)
+        if is_sample:
+            S_11, S_22, S_12 = calculate_spectrums(sample_data[iteration-1])
+        else:
+            sample_data = record_sample(N, fs, device_index)
+            S_11, S_22, S_12 = calculate_spectrums(sample_data)
 
         S11_sum = S_11 + (iteration-1)*S11_aux
         S22_sum = S_22 + (iteration-1)*S22_aux
@@ -63,6 +68,8 @@ if __name__ == "__main__":
         
         # Absorption Coefficient:
         alfa = calculate_absorption(R)
+
+        print(f"Iteración {iteration} finalizada")
 
     plot_signals(
         filename=filename,
