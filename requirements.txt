@@ -2,3 +2,5 @@ numpy
 matplotlib
 sounddevice
 scipy
+dearpygui
+screeninfo
