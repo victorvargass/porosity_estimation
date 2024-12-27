@@ -1,10 +1,12 @@
 import numpy as np
 import sounddevice as sd
 import matplotlib.pyplot as plt
+import matplotlib
 import numpy as np
 import pandas as pd
 import scipy.io.wavfile as wav
 from pathlib import Path
+matplotlib.use("Agg")  # Backend "offscreen", sin GUI
 
 def get_sound_devices():
     # Device list
@@ -81,7 +83,7 @@ def calculate_transfer_function(cross_spectrum, autospectrum, bins):
 def calculate_coherence(S_11, S_22, S_12):
     # Calculate coherence coefficient: gamma²(f) = |S_12|² / (S_11 * S_22)
     coherence = (S_12*np.conjugate(S_12)) / (S_11*S_22)
-    return coherence
+    return coherence.real
 
 def calculate_k(freqs, C):
     # Calculate k for every frecuency
@@ -141,17 +143,17 @@ def plot_signals(filename, freqs, alfa, coherence, freq_min, freq_max):
     coherence_filtered = coherence[mask]
 
     # Prepare figure
-    plt.figure(figsize=(10, 12))
+    plt.figure(figsize=(20, 10))
 
-    plt.subplot(2, 1, 1)
-    plt.plot(freqs_filtered, alfa_filtered.real, label="Absorción")
-    plt.title("Coef. Absorción")
+    plt.subplot(1, 2, 1)
+    plt.plot(freqs_filtered, alfa_filtered.real, label="Coeficiente de absorción")
+    plt.title("Coeficiente de absorción")
     plt.ylim([0, 1])
     plt.xlabel("Frecuencia (Hz)")
-    plt.ylabel("Coef. Absorción")
+    plt.ylabel("Coeficiente de absorción")
     plt.grid(True)
 
-    plt.subplot(2, 1, 2)
+    plt.subplot(1, 2, 2)
     plt.plot(freqs_filtered, coherence_filtered.real, label="Coherencia", color="orange")
     plt.title("Coherencia")
     plt.ylim([0, 1])
@@ -161,11 +163,11 @@ def plot_signals(filename, freqs, alfa, coherence, freq_min, freq_max):
 
     plt.tight_layout()
 
-    plots_folder = Path('plots/')
-    plots_folder.mkdir(parents=True, exist_ok=True)
-    plot_filename = plots_folder / f"{filename}.png"
+    results_folder = Path(f'results/{filename}/')
+    results_folder.mkdir(parents=True, exist_ok=True)
+    plot_filename = results_folder / "plot.png"
     plt.savefig(plot_filename)
-    plt.show()
+    plt.close()
 
 def generate_csv(freqs, S11_aux, S12_aux, S22_aux, R, alfa, H_12, coherence, filename):
 
@@ -228,8 +230,7 @@ def generate_short_csv(freqs, alfa, coherence, filename, freq_min, freq_max):
     df = pd.DataFrame(data)
 
     # Crear carpeta y guardar archivo CSV
-    data_folder = Path('data/')
-    data_folder.mkdir(parents=True, exist_ok=True)
-    data_filename = data_folder / f"{filename}.csv"
+    results_folder = Path(f'results/{filename}/')
+    results_folder.mkdir(parents=True, exist_ok=True)
+    data_filename = results_folder / "data.csv"
     df.to_csv(data_filename, index=False)
-    print(f"Archivo CSV generado: {data_filename}")
