@@ -3,12 +3,12 @@
 # -----------------------------
 import dearpygui.dearpygui as dpg
 
-def create_config_window(font_large, green_button_theme, red_button_theme, start_measurement, exit_application, toggle_gps):
+def create_config_window(font_large, window_width, window_height, green_button_theme, red_button_theme, start_measurement, exit_application, toggle_gps):
 
     with dpg.window(
         label="Configuración inicial",
         tag="config_window",
-        width=400, height=800,
+        width=window_width, height=window_height,
         no_move=True, no_resize=True, no_title_bar=True
     ):
         dpg.add_text("Configuración inicial", pos=(125, 40), tag="config_text")

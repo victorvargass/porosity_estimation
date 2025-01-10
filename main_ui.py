@@ -23,8 +23,11 @@ screen = screeninfo.get_monitors()[0]  # Usar el monitor principal
 screen_width = screen.width
 screen_height = screen.height
 
-viewport_x = (screen_width - 400) // 2
-viewport_y = (screen_height - 800) // 2
+viewport_width = 400
+viewport_height = 800
+
+viewport_x = (screen_width - viewport_width) // 2
+viewport_y = (screen_height - viewport_height) // 2
 
 # -----------------------------
 #  FUNCIONES DE LA INTERFAZ
@@ -106,9 +109,9 @@ def stop_measurement(sender, app_data, user_data):
 
     # Ocultar ventana de medición
     dpg.hide_item("measurement_window")
-    dpg.set_viewport_width(400)
-    dpg.set_viewport_height(800)
-    dpg.set_viewport_pos(((screen_width - 400) // 2, (screen_height - 800) // 2))
+    dpg.set_viewport_width(viewport_width)
+    dpg.set_viewport_height(viewport_height)
+    dpg.set_viewport_pos(((screen_width - viewport_width) // 2, (screen_height - viewport_height) // 2))
     dpg.show_item("config_window")
 
     if is_measuring and stop_event:
@@ -166,6 +169,8 @@ from config_window import create_config_window
 # Crear ventana de configuración
 create_config_window(
     font_large=styles["font_large"],
+    window_width=viewport_width,
+    window_height=viewport_height,
     green_button_theme=styles["green_button_theme"],
     red_button_theme=styles["red_button_theme"],
     start_measurement=start_measurement,  # Asegúrate de que esté definida
@@ -202,7 +207,7 @@ create_measurement_window(
 # -----------------------------
 #  CREAR VIEWPORT & ARRANCAR (BUCLE MANUAL)
 # -----------------------------
-dpg.create_viewport(title='Configuración inicial', width=400, height=800, resizable=False, decorated=False)
+dpg.create_viewport(title='Configuración inicial', width=viewport_width, height=viewport_height, resizable=False, decorated=False)
 dpg.setup_dearpygui()
 dpg.set_viewport_pos((viewport_x, viewport_y))
 dpg.show_viewport()
