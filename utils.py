@@ -123,9 +123,25 @@ def calculate_spectrums(recording_data):
 
     return S_11, S_22, S_12
 
-def calibration_factor(H_12, H_21):
-    # Calibration factor Hc
-    return np.sqrt(H_12*H_21)
+
+def calibration_factor(h12_I, h12_II, freqs):
+    h12_I_squared = h12_I**2
+    h12_II_squared = h12_II**2
+    
+    hc = np.sqrt(h12_I_squared / h12_II_squared)
+
+    # Calcular amplitud y fase
+    amplitudes = np.abs(hc)  # Magnitud de Hc
+    phases = np.angle(hc)   # Fase en radianes
+
+    hc_data = {
+        "frequency":  freqs,
+        "amplitude":  amplitudes,
+        "phase":      phases
+    }
+
+    return hc_data
+
 
 def plot_signals(filename, freqs, alfa, coherence, freq_min, freq_max):
     # Verificar que los tamaños de freqs, alfa y coherence coincidan
@@ -346,3 +362,50 @@ def perform_measurement(data, update_progress_callback=None, stop_event=None, pl
         freq_max=freq_max,
     )
 
+
+def perform_calibration(fs, N, M):
+
+    # Parameters
+    bins = calculate_bins(N)
+    C = 340.0  # Sound speed in m/s (m)
+
+    is_sample = True
+
+    #sound_devices = get_sound_devices()
+    #print(sound_devices)
+    device_index = 1
+
+    if is_sample:
+        samples_folder = Path('samples/')
+        channel1_file = samples_folder / 'Take1_Audio 1-1.wav'
+        channel2_file = samples_folder / 'Take1_Audio 2-1.wav'
+        sample_data, fs = load_wav_files(channel1_file, channel2_file, N) # Cut the sample in N size splits 
+
+    freqs = fs * np.arange(bins) / N
+    k = calculate_k(freqs, C)
+
+    S11_aux = S22_aux = S12_aux = np.zeros((N,))
+
+    for iteration in range(1, M + 1):
+        if is_sample:
+            S_11, S_22, S_12 = calculate_spectrums(sample_data[iteration-1])
+        else:
+            sample_data = record_sample(N, fs, device_index)
+            S_11, S_22, S_12 = calculate_spectrums(sample_data)
+
+        S11_sum = S_11 + (iteration-1)*S11_aux
+        S22_sum = S_22 + (iteration-1)*S22_aux
+        S12_sum = S_12 + (iteration-1)*S12_aux
+
+        S11_avg = S11_sum / iteration
+        S22_avg = S22_sum / iteration
+        S12_avg = S12_sum / iteration
+
+        S11_aux = S11_avg
+        S22_aux = S22_avg
+        S12_aux = S12_avg
+
+        # Transfer function H_12:
+        H_12 = calculate_transfer_function(S12_aux, S11_aux, bins)
+
+    return H_12, freqs
