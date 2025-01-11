@@ -186,16 +186,16 @@ def generate_csv(freqs, S11_aux, S12_aux, S22_aux, R, alfa, H_12, coherence, fil
     coherence = coherence[:len(freqs)]
 
     data = {
-        "f": freqs.astype(int),
-        "S11": np.round(S11_aux.real, 2),
-        "S12 mag": np.round(S12_mag, 2),
-        "S12 Fase": np.round(S12_phase, 2),
-        "S22": np.round(S22_aux.real, 2),
-        "R mag": np.round(R_mag, 2),
-        "Alfa": np.round(alfa, 2),
-        "H12 mag": np.round(H12_mag, 2),
-        "H12 fase": np.round(H12_phase, 2),
-        "Coherencia": np.round(coherence.real, 2)
+        "frequency": freqs.astype(int),
+        "s11": np.round(S11_aux.real, 2),
+        "s12_mag": np.round(S12_mag, 2),
+        "s12_phase": np.round(S12_phase, 2),
+        "s22": np.round(S22_aux.real, 2),
+        "r_mag": np.round(R_mag, 2),
+        "alfa": np.round(alfa, 2),
+        "h12_mag": np.round(H12_mag, 2),
+        "h12_phase": np.round(H12_phase, 2),
+        "coherence": np.round(coherence.real, 2)
     }
     
     df = pd.DataFrame(data)
@@ -222,9 +222,9 @@ def generate_short_csv(freqs, alfa, coherence, filename, freq_min, freq_max):
 
     # Preparar datos para exportar
     data = {
-        "f": freqs_filtered.astype(int),
-        "Alfa": np.round(alfa_filtered, 2),
-        "Coherencia": np.round(coherence_filtered.real, 2)
+        "frequency": freqs_filtered.astype(int),
+        "alfa": np.round(alfa_filtered, 2),
+        "coherence": np.round(coherence_filtered.real, 2)
     }
 
     df = pd.DataFrame(data)
