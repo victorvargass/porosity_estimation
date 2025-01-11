@@ -49,11 +49,11 @@ def load_styles_and_fonts():
     # Registrar y cargar fuentes
     with dpg.font_registry():
         try:
-            default_font = dpg.add_font("Roboto-Regular.ttf", 18)
-            font_large = dpg.add_font("Roboto-Regular.ttf", 20)
+            default_font = dpg.add_font("src/Roboto-Regular.ttf", 16)
+            font_large = dpg.add_font("src/Roboto-Regular.ttf", 20)
             dpg.bind_font(default_font)
         except:
-            print("Error al cargar la fuente 'Roboto-Regular.ttf'. Asegúrate de que el archivo existe.")
+            print("Error al cargar la fuente 'src/Roboto-Regular.ttf'. Asegúrate de que el archivo existe.")
             sys.exit(1)
     
     # Retornar estilos, temas y fuentes
