@@ -1,7 +1,7 @@
 from dearpygui import dearpygui as dpg
 import screeninfo
 import threading
-from measurement import perform_measurement
+from utils import perform_measurement
 import queue
 from pathlib import Path
 
