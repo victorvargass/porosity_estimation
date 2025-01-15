@@ -88,6 +88,7 @@ def start_measurement(sender, app_data, user_data):
     measurement_data["distance_between_mic_1_and_sample"] = dpg.get_value("distance_between_mic_1_and_sample")
     measurement_data["freq_min"] = int(dpg.get_value("freq_min"))
     measurement_data["freq_max"] = int(dpg.get_value("freq_max"))
+    measurement_data["humidity_percentage"] = dpg.get_value("humidity_percentage")
 
     dpg.set_axis_limits("absorption_xaxis",  int(dpg.get_value("freq_min")), int(dpg.get_value("freq_max")) + 100)
     dpg.set_axis_limits("coherence_xaxis",  int(dpg.get_value("freq_min")), int(dpg.get_value("freq_max")) + 100)

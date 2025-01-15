@@ -115,6 +115,16 @@ def create_config_window(font_large, window_width, window_height, green_button_t
 
             dpg.add_spacer(height=20)
 
+            dpg.add_text("Humedad")
+            dpg.add_input_float(
+                tag="humidity_percentage",
+                default_value=0.0,
+                width=150,
+                step=0,
+                format="%.2f"
+            )
+            dpg.add_spacer(height=20)
+
             # Botón "Iniciar" con tema verde
             dpg.add_button(tag="Iniciar", label="Iniciar medición", callback=start_measurement, width=310)
             dpg.bind_item_theme("Iniciar", green_button_theme)

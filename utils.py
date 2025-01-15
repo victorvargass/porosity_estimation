@@ -224,7 +224,7 @@ def generate_csv(freqs, S11_aux, S12_aux, S22_aux, R, alfa, H_12, coherence, fil
     print(f"Archivo CSV generado: {filename}")
 
 
-def generate_short_csv(freqs, alfa, coherence, filename, freq_min, freq_max):
+def generate_short_csv(freqs, humidity_percentage, alfa, coherence, filename, freq_min, freq_max):
     # Crear máscara para las frecuencias dentro del rango
     mask_freqs = (freqs >= freq_min) & (freqs <= freq_max)
 
@@ -238,7 +238,9 @@ def generate_short_csv(freqs, alfa, coherence, filename, freq_min, freq_max):
     coherence_filtered = coherence[mask_freqs]
 
     # Preparar datos para exportar
+    rows = len(freqs_filtered)  # Número total de filas
     data = {
+        "humidity_percentage": [humidity_percentage] + [None] * (rows - 1),
         "frequency": freqs_filtered.astype(int),
         "alfa": np.round(alfa_filtered, 2),
         "coherence": np.round(coherence_filtered.real, 2)
@@ -270,6 +272,8 @@ def perform_measurement(data, update_progress_callback=None, stop_event=None, pl
 
     freq_min = data.get('freq_min', 500)
     freq_max = data.get('freq_max', 3000)
+    
+    humidity_percentage = round(data.get('humidity_percentage', 0.0), 2)
 
     is_sample = True
     device_index = 1
@@ -357,6 +361,7 @@ def perform_measurement(data, update_progress_callback=None, stop_event=None, pl
     generate_short_csv(
         filename=filename,
         freqs=freqs,
+        humidity_percentage=humidity_percentage,
         alfa=alfa,
         coherence=coherence,
         freq_min=freq_min,
