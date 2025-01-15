@@ -67,7 +67,7 @@ def init_measurement(data, plot_queue):
 
     measurement_thread = threading.Thread(
         target=perform_measurement,
-        args=(data, update_progress, stop_event, plot_queue),
+        args=(data, True, update_progress, stop_event, plot_queue),
         daemon=True
     )
     measurement_thread.start()

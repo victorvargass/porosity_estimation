@@ -256,7 +256,7 @@ def generate_short_csv(freqs, humidity_percentage, alfa, coherence, filename, fr
     df.to_csv(data_filename, index=False)
 
 
-def perform_measurement(data, update_progress_callback=None, stop_event=None, plot_queue=None):
+def perform_measurement(data, is_sample=False, update_progress_callback=None, stop_event=None, plot_queue=None):
     """
     Ejecuta el proceso de medición.
     Recibe la cola 'plot_queue' para enviar datos de gráficos a ui.py.
@@ -277,7 +277,6 @@ def perform_measurement(data, update_progress_callback=None, stop_event=None, pl
     humidity_percentage = round(data.get('humidity_percentage', 0.0), 2)
     hc_file_path = data.get('hc_file_path', "")
 
-    is_sample = True
     device_index = 1
 
     if is_sample:
@@ -371,13 +370,11 @@ def perform_measurement(data, update_progress_callback=None, stop_event=None, pl
     )
 
 
-def perform_calibration(fs, N, M):
+def perform_calibration(fs, N, M, is_sample=False):
 
     # Parameters
     bins = calculate_bins(N)
     C = 340.0  # Sound speed in m/s (m)
-
-    is_sample = True
 
     #sound_devices = get_sound_devices()
     #print(sound_devices)
