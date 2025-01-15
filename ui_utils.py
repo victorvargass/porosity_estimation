@@ -89,7 +89,6 @@ def select_file_with_native_dialog():
         validate_csv_file(file_path)
 
 def on_number_of_samples_update(sender, app_data):
-    print(dpg.get_value("hc_file_path"))
     if dpg.get_value("hc_file_path"):
         dpg.set_value("hc_file_path", "")
         dpg.set_value("selected_file_text", "Error: Debe ser compatible con el número de muestras.")

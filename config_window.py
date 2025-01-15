@@ -2,6 +2,7 @@
 #  VENTANA DE CONFIGURACIÓN
 # -----------------------------
 import dearpygui.dearpygui as dpg
+from ui_utils import select_file_with_native_dialog, on_number_of_samples_update
 
 def create_config_window(font_large, window_width, window_height, green_button_theme, red_button_theme, start_measurement, exit_application, toggle_gps):
 
