@@ -8,7 +8,7 @@ h12_II = None
 freqs = None
 
 fs = 48000 # Sample rate
-N = 8192 # Number of samples
+N = 2048 # 2048 4096 8192 # Number of samples
 M = 50 # Number of iterations
 
 # Función para cargar imágenes y registrar texturas
@@ -64,12 +64,13 @@ def create_stepper_window(viewport_width, viewport_height, exit_application, gre
                 dpg.configure_item("acquire_button", label="Repetir obtención H12 (II)")
 
     # Función para exportar archivo
-    def export_file():
+    def export_file(sender, app_data, user_data):
+        N = user_data
         dpg.configure_item("action_status", pos=(500 // 2 - 100, 70))
         if h12_I is not None and h12_I.size > 0 and h12_II is not None and h12_II.size > 0:
             hc = calibration_factor(h12_I, h12_II, freqs)
             hc_df = pd.DataFrame(hc)
-            hc_df.to_csv("results/hc_calibration.csv", index=False)
+            hc_df.to_csv(f"results/hc_calibration_{N}.csv", index=False)
             # Aquí puedes implementar tu lógica para exportar el archivo con los datos de h12_I y h12_II
             dpg.set_value("action_status", "Archivo exportado con éxito")
         else:
@@ -122,7 +123,7 @@ def create_stepper_window(viewport_width, viewport_height, exit_application, gre
         dpg.bind_item_theme("acquire_button", blue_button_theme)
 
         # Botón para exportar datos (visible en paso 2)
-        dpg.add_button(label="Exportar archivo Hc", tag="export_button", callback=export_file, width=480, show=False)
+        dpg.add_button(label="Exportar archivo Hc", tag="export_button", callback=export_file, user_data=N, width=480, show=False)
         dpg.bind_item_theme("export_button", blue_button_theme)
 
         # Botones para navegación entre pasos

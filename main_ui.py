@@ -32,7 +32,7 @@ viewport_y = (screen_height - viewport_height) // 2
 # -----------------------------
 #  FUNCIONES DE LA INTERFAZ
 # -----------------------------
-from ui_utils import toggle_gps, open_folder, close_alert
+from ui_utils import toggle_gps, open_folder, close_alert, toggle_hc_calibration
 
 def update_plot(sender=None, app_data=None):
     import traceback
@@ -89,6 +89,7 @@ def start_measurement(sender, app_data, user_data):
     measurement_data["freq_min"] = int(dpg.get_value("freq_min"))
     measurement_data["freq_max"] = int(dpg.get_value("freq_max"))
     measurement_data["humidity_percentage"] = dpg.get_value("humidity_percentage")
+    measurement_data["hc_file_path"] = dpg.get_value("hc_file_path")
 
     dpg.set_axis_limits("absorption_xaxis",  int(dpg.get_value("freq_min")), int(dpg.get_value("freq_max")) + 100)
     dpg.set_axis_limits("coherence_xaxis",  int(dpg.get_value("freq_min")), int(dpg.get_value("freq_max")) + 100)
@@ -176,7 +177,8 @@ create_config_window(
     red_button_theme=styles["red_button_theme"],
     start_measurement=start_measurement,  # Asegúrate de que esté definida
     exit_application=exit_application,  # Asegúrate de que esté definida
-    toggle_gps=toggle_gps  # Asegúrate de que esté definida
+    toggle_gps=toggle_gps,  # Asegúrate de que esté definida
+    toggle_hc_calibration=toggle_hc_calibration  # Asegúrate de que esté definida
 )
 
 # -----------------------------

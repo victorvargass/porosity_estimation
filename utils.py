@@ -77,9 +77,15 @@ def cross_spectrum(fft_1, fft_2):
     cross_spectrum = fft_2 * np.conj(fft_1)
     return cross_spectrum
 
-def calculate_transfer_function(cross_spectrum, autospectrum, bins):
+def calculate_transfer_function(cross_spectrum, autospectrum, bins, hc_file_path=None):
     # Calculate transfer function H_12 = S12 / S11
-    return cross_spectrum[:bins] / autospectrum[:bins]
+    H12 = cross_spectrum[:bins] / autospectrum[:bins]
+    if hc_file_path:
+        df = pd.read_csv(hc_file_path)
+        hc_column = df['hc']
+        HC = np.array([complex(x) for x in hc_column])
+        H12 / HC
+    return H12
 
 def calculate_coherence(S_11, S_22, S_12):
     # Calculate coherence coefficient: gamma²(f) = |S_12|² / (S_11 * S_22)
@@ -131,14 +137,9 @@ def calibration_factor(h12_I, h12_II, freqs):
     
     hc = np.sqrt(h12_I_squared / h12_II_squared)
 
-    # Calcular amplitud y fase
-    amplitudes = np.abs(hc)  # Magnitud de Hc
-    phases = np.angle(hc)   # Fase en radianes
-
     hc_data = {
         "frequency":  freqs,
-        "amplitude":  amplitudes,
-        "phase":      phases
+        "hc":  hc,
     }
 
     return hc_data
@@ -274,6 +275,7 @@ def perform_measurement(data, update_progress_callback=None, stop_event=None, pl
     freq_max = data.get('freq_max', 3000)
     
     humidity_percentage = round(data.get('humidity_percentage', 0.0), 2)
+    hc_file_path = data.get('hc_file_path', "")
 
     is_sample = True
     device_index = 1
@@ -324,7 +326,7 @@ def perform_measurement(data, update_progress_callback=None, stop_event=None, pl
         # Coherencia
         coherence = calculate_coherence(S11_aux, S22_aux, S12_aux)
         # Transfer function
-        H_12 = calculate_transfer_function(S12_aux, S11_aux, bins)
+        H_12 = calculate_transfer_function(S12_aux, S11_aux, bins, hc_file_path)
         # Reflection
         R = calculate_reflection(k, S, L, H_12)
 

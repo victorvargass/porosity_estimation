@@ -125,6 +125,15 @@ def create_config_window(font_large, window_width, window_height, green_button_t
             )
             dpg.add_spacer(height=20)
 
+            dpg.add_text("¿Calibración Hc?")
+            dpg.add_checkbox(tag="hc_calibration", callback=toggle_hc_calibration)
+
+            # Input de archivo para Calibración HC
+            with dpg.group(horizontal=False, tag="hc_file", show=False):
+                dpg.add_button(label="Seleccionar archivo de calibración", callback=select_file_with_native_dialog)
+                dpg.add_text("No se ha seleccionado ningún archivo.", tag="selected_file_text")
+                dpg.add_input_text(tag="hc_file_path", default_value="", show=False)
+
             # Botón "Iniciar" con tema verde
             dpg.add_button(tag="Iniciar", label="Iniciar medición", callback=start_measurement, width=310)
             dpg.bind_item_theme("Iniciar", green_button_theme)
