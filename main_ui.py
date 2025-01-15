@@ -24,7 +24,7 @@ screen_width = screen.width
 screen_height = screen.height
 
 viewport_width = 400
-viewport_height = 800
+viewport_height = 1000
 
 viewport_x = (screen_width - viewport_width) // 2
 viewport_y = (screen_height - viewport_height) // 2

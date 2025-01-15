@@ -4,7 +4,7 @@
 import dearpygui.dearpygui as dpg
 from ui_utils import select_file_with_native_dialog, on_number_of_samples_update
 
-def create_config_window(font_large, window_width, window_height, green_button_theme, red_button_theme, start_measurement, exit_application, toggle_gps):
+def create_config_window(font_large, window_width, window_height, green_button_theme, red_button_theme, start_measurement, exit_application, toggle_gps, toggle_hc_calibration):
 
     with dpg.window(
         label="Configuración inicial",
@@ -20,7 +20,7 @@ def create_config_window(font_large, window_width, window_height, green_button_t
             dpg.add_input_text(tag="identification", default_value="Identificacion 1", width=300)
             dpg.add_text("Localizacion")
             dpg.add_input_text(tag="localization", default_value="Localizacion 1", width=300)
-            dpg.add_text("Activar GPS")
+            dpg.add_text("¿Activar GPS?")
             dpg.add_checkbox(tag="gps", callback=toggle_gps)
 
             # Agrupación horizontal para Latitud y Longitud
@@ -33,6 +33,7 @@ def create_config_window(font_large, window_width, window_height, green_button_t
                         default_value=0.0,
                         width=150,
                         show=False,
+                        step=0,
                         format="%0.8f"
                     )
                 
@@ -44,6 +45,7 @@ def create_config_window(font_large, window_width, window_height, green_button_t
                         default_value=0.0,
                         width=150,
                         show=False,
+                        step=0,
                         format="%0.8f"
                     )
 
@@ -69,7 +71,8 @@ def create_config_window(font_large, window_width, window_height, green_button_t
                         tag="number_of_samples",
                         items=[2048, 4096, 8192],
                         default_value=4096,
-                        width=150
+                        width=150,
+                        callback=on_number_of_samples_update
                     )
 
             dpg.add_text("Muestreo [Hz]")
@@ -83,6 +86,7 @@ def create_config_window(font_large, window_width, window_height, green_button_t
                 default_value=0.072, 
                 width=150,
                 step=0,
+                format="%.2f"
             )
             dpg.add_text("Distancia entre micrófono 1 y muestra [m]")
             dpg.add_input_float(
@@ -90,6 +94,7 @@ def create_config_window(font_large, window_width, window_height, green_button_t
                 default_value=0.5,
                 width=150,
                 step=0,
+                format="%.2f"
             )
 
             dpg.add_spacer(height=20)
@@ -135,11 +140,14 @@ def create_config_window(font_large, window_width, window_height, green_button_t
                 dpg.add_text("No se ha seleccionado ningún archivo.", tag="selected_file_text")
                 dpg.add_input_text(tag="hc_file_path", default_value="", show=False)
 
+            dpg.add_spacer(height=40)
+
+
             # Botón "Iniciar" con tema verde
             dpg.add_button(tag="Iniciar", label="Iniciar medición", callback=start_measurement, width=310)
             dpg.bind_item_theme("Iniciar", green_button_theme)
 
-            dpg.add_spacer(height=20)
+            dpg.add_spacer(height=5)
 
             # Botón "Salir" con tema rojo
             dpg.add_button(tag="Salir", label="Salir", callback=exit_application, width=310)
