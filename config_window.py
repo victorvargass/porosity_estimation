@@ -57,7 +57,7 @@ def create_config_window(font_large, window_width, window_height, green_button_t
                     dpg.add_text("Promediaciones")
                     dpg.add_input_int(
                         tag="averages",
-                        default_value=200,
+                        default_value=50,
                         min_value=0,
                         max_value=1000,
                         width=150,
@@ -70,7 +70,7 @@ def create_config_window(font_large, window_width, window_height, green_button_t
                     dpg.add_combo(
                         tag="number_of_samples",
                         items=[2048, 4096, 8192],
-                        default_value=4096,
+                        default_value=8192,
                         width=150,
                         callback=on_number_of_samples_update
                     )
@@ -83,18 +83,18 @@ def create_config_window(font_large, window_width, window_height, green_button_t
             dpg.add_text("Distancia entre micrófonos [m]")
             dpg.add_input_float(
                 tag="distance_between_mics",
-                default_value=0.072, 
+                default_value=0.0315, 
                 width=150,
                 step=0,
-                format="%.2f"
+                format="%.4f"
             )
             dpg.add_text("Distancia entre micrófono 1 y muestra [m]")
             dpg.add_input_float(
                 tag="distance_between_mic_1_and_sample",
-                default_value=0.5,
+                default_value=0.1115,
                 width=150,
                 step=0,
-                format="%.2f"
+                format="%.4f"
             )
 
             dpg.add_spacer(height=20)

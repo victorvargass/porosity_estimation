@@ -7,8 +7,9 @@ h12_I = None
 h12_II = None
 freqs = None
 
+is_sample = True
 fs = 48000 # Sample rate
-N = 2048 # 2048 4096 8192 # Number of samples
+N = 8192 # 2048 4096 8192 # Number of samples
 M = 50 # Number of iterations
 
 # Función para cargar imágenes y registrar texturas
@@ -48,7 +49,7 @@ def create_stepper_window(viewport_width, viewport_height, exit_application, gre
         if current_step == 0:
             dpg.configure_item("next_button", show=False)
             dpg.set_value("action_status", "")
-            h12_I, freqs = perform_calibration(fs, N, M, True)
+            h12_I, freqs = perform_calibration(fs, N, M, 1, is_sample)
             if h12_I is not None:
                 dpg.set_value("action_status", "H12 (I) adquirido con éxito.")
                 dpg.configure_item("next_button", show=True)
@@ -57,7 +58,7 @@ def create_stepper_window(viewport_width, viewport_height, exit_application, gre
         elif current_step == 1:
             dpg.configure_item("next_button", show=False)
             dpg.set_value("action_status", "")
-            h12_II, freqs = perform_calibration(fs, N, M, True)
+            h12_II, freqs = perform_calibration(fs, N, M, 2, is_sample)
             if h12_II is not None:
                 dpg.set_value("action_status", "H12 (II) adquirido con éxito.")
                 dpg.configure_item("next_button", show=True)
